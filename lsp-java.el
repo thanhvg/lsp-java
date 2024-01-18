@@ -61,7 +61,7 @@ directory inferred by lsp-java is not writable."
   :risky t
   :type 'directory)
 
-(defcustom lsp-java-java-path "java"
+(defcustom lsp-java-java-path "jdtls"
   "Path of the java executable."
   :type 'string)
 
@@ -650,29 +650,47 @@ FULL specify whether full or incremental build will be performed."
         (when (string-match "Revision" gradle-version-output)
           (nth 2 (split-string gradle-version-output)))))))
 
+;; (defun lsp-java--ls-command ()
+;;   "LS startup command."
+;;   (let ((server-jar (lsp-file-local-name (lsp-java--locate-server-jar)))
+;;         (server-config (if lsp-java-server-config-dir
+;; 			   lsp-java-server-config-dir
+;; 			 (lsp-file-local-name (lsp-java--locate-server-config))))
+;;         (java-9-args (when (lsp-java--java-9-plus-p)
+;;                        lsp-java-9-args)))
+;;     (lsp-java--ensure-dir lsp-java-workspace-dir)
+;;     `(,lsp-java-java-path
+;;       "-Declipse.application=org.eclipse.jdt.ls.core.id1"
+;;       "-Dosgi.bundles.defaultStartLevel=4"
+;;       "-Declipse.product=org.eclipse.jdt.ls.core.product"
+;;       "-Dlog.protocol=true"
+;;       "-Dlog.level=ALL"
+;;       ,@lsp-java-vmargs
+;;       "-jar"
+;;       ,server-jar
+;;       "-configuration"
+;;       ,server-config
+;;       "-data"
+;;       ,(lsp-file-local-name lsp-java-workspace-dir)
+;;       ,@java-9-args)))
+
 (defun lsp-java--ls-command ()
   "LS startup command."
-  (let ((server-jar (lsp-file-local-name (lsp-java--locate-server-jar)))
-        (server-config (if lsp-java-server-config-dir
-			   lsp-java-server-config-dir
-			 (lsp-file-local-name (lsp-java--locate-server-config))))
-        (java-9-args (when (lsp-java--java-9-plus-p)
-                       lsp-java-9-args)))
-    (lsp-java--ensure-dir lsp-java-workspace-dir)
-    `(,lsp-java-java-path
-      "-Declipse.application=org.eclipse.jdt.ls.core.id1"
-      "-Dosgi.bundles.defaultStartLevel=4"
-      "-Declipse.product=org.eclipse.jdt.ls.core.product"
-      "-Dlog.protocol=true"
-      "-Dlog.level=ALL"
-      ,@lsp-java-vmargs
-      "-jar"
-      ,server-jar
-      "-configuration"
-      ,server-config
-      "-data"
-      ,(lsp-file-local-name lsp-java-workspace-dir)
-      ,@java-9-args)))
+  `(,lsp-java-java-path))
+    ;; (lsp-java--ensure-dir lsp-java-workspace-dir)
+    ;; `(,lsp-java-java-path
+    ;;   ;; "-Declipse.application=org.eclipse.jdt.ls.core.id1"
+    ;;   ;; "-Dosgi.bundles.defaultStartLevel=4"
+    ;;   ;; "-Declipse.product=org.eclipse.jdt.ls.core.product"
+    ;;   ;; "-Dlog.protocol=true"
+    ;;   ;; "-Dlog.level=ALL"
+    ;;   ;; ,@lsp-java-vmargs
+    ;;   ;; "-jar"
+    ;;   ;; ,server-jar
+    ;;   ;; "-configuration"
+    ;;   ;; ,server-config
+    ;;   "-data"
+    ;;   ,(lsp-file-local-name lsp-java-workspace-dir)))
 
 (eval-and-compile
   (lsp-interface
@@ -1373,7 +1391,8 @@ current symbol."
                                         #'lsp-java--locate-server-jar)
   :major-modes '(java-mode java-ts-mode jdee-mode)
   :server-id 'jdtls
-  :multi-root t
+  ;; :multi-root t
+  :multi-root nil
   :notification-handlers (ht ("language/status" #'lsp-java--language-status-callback)
                              ("language/actionableNotification" #'lsp-java--actionable-notification-callback)
                              ("language/progressReport" #'lsp-java--progress-report)
