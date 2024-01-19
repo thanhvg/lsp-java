@@ -99,13 +99,14 @@ directory inferred by lsp-java is not writable."
   :group 'lsp-java)
 
 ;; (defcustom lsp-java-vmargs '("-XX:+UseParallelGC" "-XX:GCTimeRatio=4" "-XX:AdaptiveSizePolicyWeight=90" "-Dsun.zip.disableMemoryMapping=true" "-Xmx1G" "-Xms100m")
-(defcustom lsp-java-vmargs '("--jvm-arg=-javaagent:/home/tvuong/java-tools/lombok.jar")
+(defcustom lsp-java-vmargs '()
   "Specifies extra VM arguments used to launch the Java Language Server.
 
 Eg. use `-noverify -Xmx1G -XX:+UseG1GC
 -XX:+UseStringDeduplication` to bypass class
 verification,increase the heap size to 1GB and enable String
-deduplication with the G1 Garbage collector"
+deduplication with the G1 Garbage collector. Or to enable lombok
+-javaagent:/path/to/lombok.jar"
   :risky t
   :type '(repeat string))
 
@@ -677,9 +678,10 @@ FULL specify whether full or incremental build will be performed."
 
 (defun lsp-java--ls-command ()
   "LS startup command."
-  `(,lsp-java-java-path
-    ,@lsp-java-vmargs
-    ))
+  (append (list lsp-java-java-path)
+          (mapcar (lambda (it)
+                    (format "--jvm-arg=%s" it))
+                  lsp-java-vmargs)))
     ;; (lsp-java--ensure-dir lsp-java-workspace-dir)
     ;; `(,lsp-java-java-path
     ;;   ;; "-Declipse.application=org.eclipse.jdt.ls.core.id1"
