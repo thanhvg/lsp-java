@@ -1171,7 +1171,7 @@ current symbol."
            (methods-to-override (lsp-java--completing-read-multiple
                                  "Select methods to override"
                                  methods-data
-                                 (-map #'cl-rest methods-data))))
+                                 nil)))
       (lsp-java--apply-document-changes
        (lsp-request "java/addOverridableMethods"
                     (list :overridableMethods (apply #'vector methods-to-override)
