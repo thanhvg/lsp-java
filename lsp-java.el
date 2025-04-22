@@ -199,10 +199,16 @@ pass a list, only a vector."
   :type 'boolean
   :lsp-path "java.signatureHelp.enabled")
 
-(lsp-defcustom lsp-java-implementations-code-lens-enabled nil
-  "Enable/disable the implementations code lens."
-  :type 'boolean
-  :lsp-path "java.implementationsCodeLens.enabled")
+(lsp-defcustom lsp-java-implementation-code-lens "all"
+  "Configure the implementations code lens.
+
+\"none\" means disabled.
+ref: https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/master/org.eclipse.jdt.ls.core/src/org/eclipse/jdt/ls/core/internal/handlers/CodeLensHandler.java#L234"
+  :type '(choice (const "none")
+                 (const "all")
+                 (const "types")
+                 (const "methods"))
+  :lsp-path "java.implementationCodeLens")
 
 (lsp-defcustom lsp-java-configuration-maven-user-settings nil
   "Path to Maven's settings.xml"
