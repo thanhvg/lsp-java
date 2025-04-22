@@ -691,8 +691,8 @@ FULL specify whether full or incremental build will be performed."
     (if (and lsp-java-jdt-ls-prefer-native-command
              server-cmd)
         `(,server-cmd
-          "--jvm-arg=-Dlog.protocol=true"
-          "--jvm-arg=-Dlog.level=ALL"
+          ;; "--jvm-arg=-Dlog.protocol=true"
+          ;; "--jvm-arg=-Dlog.level=ALL"
           ,@(mapcar (lambda (str) (concat "--jvm-arg=" str)) lsp-java-vmargs))
       (let ((server-jar (lsp-file-local-name (lsp-java--locate-server-jar)))
             (server-config (if lsp-java-server-config-dir
@@ -1415,7 +1415,7 @@ current symbol."
                                         #'lsp-java--locate-server-jar)
   :major-modes '(java-mode java-ts-mode jdee-mode)
   :server-id 'jdtls
-  :multi-root t
+  :multi-root nil
   :notification-handlers (ht ("language/status" #'lsp-java--language-status-callback)
                              ("language/actionableNotification" #'lsp-java--actionable-notification-callback)
                              ("language/progressReport" #'lsp-java--progress-report)
